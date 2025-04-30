@@ -1,13 +1,34 @@
-import React from 'react';
-import { NavLink } from 'react-router';
+import React, { use } from 'react';
+import { Link, NavLink } from 'react-router';
 import './nav.css'
+import { AuthContext } from '../contexts/AuthContext';
 
 const Navbar = () => {
 
+    const { user, logoutUser } = use(AuthContext)
+    console.log(user);
+    // const userInfo = use(AuthContext)
+    // console.log('nav', userInfo);
+
+    const handleLogout = () => {
+        logoutUser()
+        .then(()=> {
+            console.log('Successfully Logged Out');
+        }).catch(error =>{
+            console.log(error);
+        })
+    }
+
     const links = <>
-     <li><NavLink to="/">Home</NavLink></li>
-     <li><NavLink to="/login">Login</NavLink></li>
-     <li><NavLink to="/register">Register</NavLink></li>
+        <li><NavLink to="/">Home</NavLink></li>
+        <li><NavLink to="/login">Login</NavLink></li>
+        <li><NavLink to="/register">Register</NavLink></li>
+        <li><NavLink to="/dashboard">Dashboard</NavLink></li>
+        {user &&
+        <>
+        <li><NavLink to="/profile">Profile</NavLink></li>
+        <li><NavLink to="/orders">Orders</NavLink></li>
+        </>}
     </>
     return (
         <div className="navbar bg-base-100 shadow-sm">
@@ -26,11 +47,16 @@ const Navbar = () => {
             </div>
             <div className="navbar-center hidden lg:flex">
                 <ul className="menu menu-horizontal px-1">
-                {links}
+                    {links}
                 </ul>
             </div>
             <div className="navbar-end">
-                <a className="btn">Button</a>
+                {user ? 
+                <>
+                <span className='mr-3 bg-blue-300 rounded-2xl p-2'>{user.email}</span>
+                <a onClick={handleLogout} className="btn">Log Out</a> 
+                </>
+                : <Link to='/login'><button className='btn'>Login</button></Link>}
             </div>
         </div>
     );

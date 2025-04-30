@@ -1,9 +1,14 @@
-import { createUserWithEmailAndPassword } from 'firebase/auth';
-import React from 'react';
-import { Link } from 'react-router';
-import { auth } from '../firebase.init';
+// import { createUserWithEmailAndPassword } from 'firebase/auth';
+import React, { use } from 'react';
+import { Link, useNavigate } from 'react-router';
+import { AuthContext } from '../contexts/AuthContext';
+// import { auth } from '../firebase.init';
 
 const Register = () => {
+
+    const {createUser} = use(AuthContext)
+    const navigate = useNavigate()
+
     const handleRegister = e => {
         e.preventDefault ();
 
@@ -14,12 +19,20 @@ const Register = () => {
         console.log(name, email, password);
 
         // Create User
-        createUserWithEmailAndPassword(auth, email, password)
+        // createUserWithEmailAndPassword(auth, email, password)
+        // .then(result => {
+        //     console.log(result);
+        // }).catch(error => {
+        //     console.log(error);
+        // })
+
+        createUser(email, password)
         .then(result => {
-            console.log(result);
-        }).catch(error => {
-            console.log(error);
-        })
+                console.log(result);
+                navigate('/')
+            }).catch(error => {
+                console.log(error);
+            })
     }
 
     
